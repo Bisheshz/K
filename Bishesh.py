@@ -191,7 +191,7 @@ def clotox(cookie):
 ###----------[ LOGIN ]---------- ###
 def login():
     resik()
-    mkdir_data_login()
+    #mkdir_data_login()
     #poster()
     print('%s[%s•%s] %sLalu Masukkan Kode Autentikasi'%(M,P,M,P))
     cookie = str(input('\n%s[%s•%s] %sMasukkan Cookies %s: %s'%(J,P,J,P,J,P)))
