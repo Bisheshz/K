@@ -214,5 +214,6 @@ def user(nama):
 
 if __name__ == '__main__':
     resik()
+    login()
     #tampilan_menu()
 print('%s[%s•%s] %s'%(J,P,J,P))
