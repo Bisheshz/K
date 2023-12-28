@@ -202,7 +202,7 @@ def login():
         bot_author(coki,token,cookie)
         open('login/cookie.json','w').write(cookie)
         open('login/token.json','w').write(token)
-        tampilan_menu()
+        #tampilan_menu()
     except requests.exceptions.ConnectionError:print('\n   %s[%s•%s] %sTidak Ada Koneksi Internet %s!%s\n'%(M,P,M,P,M,P));exit()
     except (KeyError,IOError,AttributeError):print('\n   %s[%s•%s] %sCookies Invalid %s!%s\n'%(M,P,M,P,M,P));exit()
 
@@ -210,9 +210,9 @@ def login():
 def user(nama):
     print(''%())
     print('        %s[%s•%s] %sHello %s%s %s!'%(J,P,J,P,J,nama,P))
-    login 
+    login()
 
 if __name__ == '__main__':
     resik()
-    tampilan_menu()
+    #tampilan_menu()
 print('%s[%s•%s] %s'%(J,P,J,P))
