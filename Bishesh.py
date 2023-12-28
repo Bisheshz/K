@@ -1,219 +1,197 @@
-Author    = 'Dapunta Khurayra X'
-Facebook  = 'Facebook.com/Dapunta.Khurayra.X'
-Instagram = 'Instagram.com/Dapunta.Ratya'
-Whatsapp  = '082245780524'
-YouTube   = 'Youtube.com/channel/UCZqnZlJ0jfoWSnXrNEj5JHA'
-Version   = '0.6'
-Denventa  = 1827084332
-Postingan = 10217173381366429
-
-###----------[ IMPORT LIBRARY ]---------- ###
-import requests,bs4,sys,os,random,time,re,json,uuid,subprocess,rich,shutil,webbrowser,base64
-from random import randint
+#--> Import Default Module & Library
+import os, sys, random, time, json, re, concurrent, urllib, shutil, datetime
 from concurrent.futures import ThreadPoolExecutor
-from bs4 import BeautifulSoup as par
-from datetime import date
-from datetime import datetime
-from rich import print as printer
-from rich.panel import Panel
-from urllib.parse import quote
+from random import choice as rc
+from random import randrange as rr
 
-###----------[ ANSII COLOR STYLE ]---------- ###
-Z = "\x1b[0;90m"     # Hitam
-M = "\x1b[38;5;196m" # Merah
-H = "\x1b[38;5;46m"  # Hijau
-K = "\x1b[38;5;226m" # Kuning
-B = "\x1b[38;5;44m"  # Biru
-U = "\x1b[0;95m"     # Ungu
-O = "\x1b[0;96m"     # Biru Muda
-P = "\x1b[38;5;231m" # Putih
-J = "\x1b[38;5;208m" # Jingga
-A = "\x1b[38;5;248m" # Abu-Abu
+#--> Import Extra Module & Library
+def mod():
+    global requests, bs4, bs
+    clear()
+    try: import requests
+    except Exception as e: os.system('pip install requests'); import requests
+    try: import bs4
+    except Exception as e: os.system('pip install bs4'); import bs4
+    from bs4 import BeautifulSoup as bs
+    try: os.mkdir('BotFriend')
+    except Exception as e: pass
+    clear()
 
-###----------[ RICH COLOR STYLE ]---------- ###
-Z2 = "[#000000]" # Hitam
-M2 = "[#FF0000]" # Merah
-H2 = "[#00FF00]" # Hijau
-K2 = "[#FFFF00]" # Kuning
-B2 = "[#00C8FF]" # Biru
-U2 = "[#AF00FF]" # Ungu
-N2 = "[#FF00FF]" # Pink
-O2 = "[#00FFFF]" # Biru Muda
-P2 = "[#FFFFFF]" # Putih
-J2 = "[#FF8F00]" # Jingga
-A2 = "[#AAAAAA]" # Abu-Abu
+#--> Global Variable
+default_ua_windows = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
+random_ua_windows = lambda : 'Mozilla/5.0 (Windows NT %s.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%s.%s.%s.%s Safari/537.36'%(rc(['10','11']),rr(110,201),rr(0,10),rr(0,10),rr(0,10))
+headers_get  = lambda i=default_ua_windows : {'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7','Accept-Encoding':'gzip, deflate','Accept-Language':'en-US,en;q=0.9','Cache-Control':'max-age=0','Dpr':'1','Pragma':'akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-extracted-values, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-serial-no, akamai-x-get-request-id,akamai-x-get-nonces,akamai-x-get-client-ip,akamai-x-feo-trace','Sec-Ch-Prefers-Color-Scheme':'dark','Sec-Ch-Ua':'','Sec-Ch-Ua-Full-Version-List':'','Sec-Ch-Ua-Mobile':'?0','Sec-Ch-Ua-Model':'','Sec-Ch-Ua-Platform':'','Sec-Ch-Ua-Platform-Version':'','Sec-Fetch-Dest':'document','Sec-Fetch-Mode':'navigate','Sec-Fetch-Site':'none','Sec-Fetch-User':'?1','Upgrade-Insecure-Requests':'1','User-Agent':i}
+headers_post = lambda i=default_ua_windows : {'Accept':'*/*','Accept-Encoding':'gzip, deflate','Accept-Language':'en-US,en;q=0.9','Content-Length':'1545','Content-Type':'application/x-www-form-urlencoded','Dpr':'1','Origin':'https://www.facebook.com','Referer':'https://www.facebook.com','Sec-Ch-Prefers-Color-Scheme':'dark','Sec-Ch-Ua':"",'Sec-Ch-Ua-Full-Version-List':"",'Sec-Ch-Ua-Mobile':'?0','Sec-Ch-Ua-Model':"",'Sec-Ch-Ua-Platform':"",'Sec-Ch-Ua-Platform-Version':"",'Sec-Fetch-Dest':'empty','Sec-Fetch-Mode':'cors','Sec-Fetch-Site':'same-origin','User-Agent':i}
 
-###----------[ USER AGENT ]---------- ###
-ua_default = 'Mozilla/5.0 (Linux; Android 3.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.66 Mobile Safari/537.36'
-ua_samsung = 'Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.121 Mobile Safari/537.36 [FB_IAB/FB4A;FBAV/35.0.0.48.273;]'
-ua_nokia   = 'nokiac3-00/5.0 (07.20) profile/midp-2.1 configuration/cldc-1.1 mozilla/5.0 applewebkit/420+ (khtml, like gecko) safari/420+'
-ua_xiaomi  = 'Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_oppo    = 'Mozilla/5.0 (Linux; Android 5.1.1; A37f) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.105 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_vivo    = 'Mozilla/5.0 (Linux; Android 11; vivo 1918) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.62 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_iphone  = 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1'
-ua_asus    = 'Mozilla/5.0 (Linux; Android 5.0; ASUS_Z00AD Build/LRX21V) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/37.0.0.0 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_lenovo  = 'Mozilla/5.0 (Linux; U; Android 5.0.1; ru-RU; Lenovo A788t Build/LRX22C) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 UCBrowser/11.3.0.950 U3/0.8.0 Mobile Safari/E7FBAF'
-ua_huawei  = 'Mozilla/5.0 (Linux; Android 8.1.0; HUAWEI Y7 PRIME 2019 Build/5887208) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.62 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_windows = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]'
-ua_chrome  = 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.58 Mobile Safari/537.36'
-ua_fb      = 'Mozilla/5.0 (Linux; Android 8.0.0; RNE-L21 Build/HUAWEIRNE-L21; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/100.0.4896.58 Mobile Safari/537.36 [FB_IAB/FB4A;FBAV/360.0.0.30.113;]'
-komentar   = '\n\nhttps://www.facebook.com/' + str(Postingan)
+#--> Clear Terminal
+def clear(): os.system('clear' if 'linux' in sys.platform.lower() else 'cls')
 
-###----------[ TIME ]---------- ###
-id_dev = 345 - 340 + 720 - 723
-skrng = datetime.now()
-tahun = skrng.year
-bulan = skrng.month
-hari  = skrng.day
-bulan_ttl = {"01": "Januari", "02": "Februari", "03": "Maret", "04": "April", "05": "Mei", "06": "Juni", "07": "Juli", "08": "Agustus", "09": "September", "10": "Oktober", "11": "November", "12": "Desember"}
-bulan_cek = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"]
-try:
-    if bulan < 0 or bulan > 12:
-        exit()
-    bulan_skrng = bulan - 1
-except ValueError:
-    exit()
-Codename  = 159357
-CoY = ('\r   %s[%s•%s] %sDilarang Keras Merecode %s!%s'%(M,P,M,P,M,P))
-_bulan_ = bulan_cek[bulan_skrng]
-tanggal = ("%s-%s-%s"%(hari,_bulan_,tahun))
+#--> Time
+def GetTime():
+    skr = datetime.datetime.now()
+    jam = int(skr.strftime('%H'))
+    if    3<jam<=10 : t = 'Pagi'
+    elif 10<jam<=14 : t = 'Siang'
+    elif 14<jam<=18 : t = 'Sore'
+    elif 18<jam<=24 or 0<=jam<=3 : t = 'Malam'
+    return(t)
 
+#--> Random Comment
+def GenerateComment(nm='Kamu', tm=GetTime()):
+    sapa = ['Haii','Haloo','Hii','Aloo']
+    psan = [
+        'Ketika kamuu ngelakuin sesuatu yang mulia dan indah, tapi gaada seorang pun memperhatikan, jangan bersedih. Karena matahari pun tampil cantik setiap pagi meski sebagian besar penontonnya masih tertidur.',
+        'Jomblo boleh, kesepian jangan. Sini, biar kamu enggak kesepian di %s yang cerah ini, aku ikhlas, enggak apa-apa biar aku saja yang ngucapin selamat %s'%(GetTime().lower(),GetTime().lower()),
+        'Pemimpi sepertimu tidak butuh ucapan selamat %s, yang kamu butuhkan adalah alarm besar dan teman menyebalkan seperti ku untuk membuatmu terbangun dari mimpimu.'%(GetTime().lower()),
+        'Jangan khawatir tentang kegagalan, khawatirlah tentang peluang yang kamu lewatkan ketika kamu bahkan tidak mencoba.',
+        'Setiap manusia punya kesempatan baru, jangan kamu terpaku dengan masa lalumu. Lihat ke luar dan syukuri segala nikmat yang diberikan oleh Tuhan.',
+        'Lupakan apa yang tidak dapat kamu capai kemarin dan pikirkan hal-hal indah yang kamu miliki hari ini.',
+        'Teman lama pergi, teman baru datang. Seperti hari, yang lama berlalu dan pagi pun menjelang. Yang paling penting adalah bagaimana membuatnya berarti.',
+        'Kamu tidak harus menjadi hebat dulu untuk memulai, tapi kamu perlu memulai untuk menjadi hebat']
+    love = ['❤️','💙','🧡','💚','💛','💜','🖤']
+    supp = [
+        'Semangat Yaa Menjalani Hari-Harinyaa %s'%(random.choice(love)),
+        'Tetep Semangat, Jangan Nyerah %s'%(random.choice(love)),
+        'Kalau Kamu Butuh Aku, Aku Disini Kok %s'%(random.choice(love)),
+        'Jangan Merasa Kesepian, Kan Ada Aku Disini %s'%(random.choice(love)),
+        'Jangan Sedih Terus Dong, Kan Aku Jadi Ikutan Sedih %s'%(random.choice(love)),
+        'Kamu Pasti Bisa! Semangatt %s'%(random.choice(love)),
+        'Tenang Ajaa, Aku Support Kamu Terus Kok %s'%(random.choice(love)),
+        'Jangan Nyerah Yaa, Yang Akan Datang Akan Lebih Baik Buatmu %s'%(random.choice(love))]
+    op  = random.choice(sapa)
+    psn = random.choice(psan)
+    sp  = random.choice(supp)
+    return(f'{op} {nm}, Selamat {tm}!\n{psn}\n{sp}')
 
-###----------[ JANGAN DIHAPUS NANTI ERROR ]---------- ###
-SAKERA = Codename + len(Author) - len(Facebook) + len(Instagram) - len(Whatsapp) + len(YouTube)
-sakara = len(Author)    +  Codename
-sakira = len(Facebook)  +  Codename
-sakura = len(Instagram) +  Codename
-sakera = len(Whatsapp)  +  Codename
-sakora = len(YouTube)   +  Codename
-ip_log = Denventa * id_dev - 3654168663
+#--> Get Data
+def GetData(req):
+    actor = re.search('"actorID":"(.*?)"',str(req)).group(1)
+    haste = re.search('"haste_session":"(.*?)"',str(req)).group(1)
+    conne = re.search('"connectionClass":"(.*?)"',str(req)).group(1)
+    spinr = re.search('"__spin_r":(.*?),',str(req)).group(1)
+    spinb = re.search('"__spin_b":"(.*?)"',str(req)).group(1)
+    spint = re.search('"__spin_t":(.*?),',str(req)).group(1)
+    hsi = re.search('"hsi":"(.*?)"',str(req)).group(1)
+    comet = re.search('"comet_env":(.*?),',str(req)).group(1)
+    dtsg = re.search('"DTSGInitialData",\[\],{"token":"(.*?)"}',str(req)).group(1)
+    jazoest = re.search('&jazoest=(.*?)"',str(req)).group(1)
+    lsd = re.search('"LSD",\[\],{"token":"(.*?)"}',str(req)).group(1)
+    dta  = {'av':actor,'__user':actor,'__a':'1','__hs':haste,'dpr':'1','__ccg':conne,'__rev':spinr,'__hsi':hsi,'__comet_req':comet,'fb_dtsg':dtsg,'jazoest':jazoest,'lsd':lsd,'__spin_r':spinr,'__spin_b':spinb,'__spin_t':spint}
+    return(dta)
 
-###----------[ GLOBAL URL & HEADERS ]---------- ###
-url_businness = "https://business.facebook.com"
-ua_business = "Mozilla/5.0 (Linux; Android 8.1.0; MI 8 Build/OPM1.171019.011) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.86 Mobile Safari/537.36"
-kata_dev = 'Lu Ganteng Banget Bang. Gw Mau Recode SClu, Soalnya Gw Goblok Soal Coding'
-web_fb = "https://www.facebook.com/"
-m_fb = "https://m.facebook.com/"
-mbasic = "https://mbasic.facebook.com/"
-header_grup = {"user-agent": "Mozilla/5.0 (Linux; Android 10; Mi 9T Pro Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.181 Mobile Safari/537.36 [FBAN/EMA;FBLC/id_ID;FBAV/239.0.0.10.109;]"}
+class Main():
 
+    def __init__(self):
+        try:
+            self.cookie = open('login/cookie.json','r').read()
+        except Exception as e: exit('Cookie Invalid')
+        self.rk = 2
 
-###----------[ CLEAR TERMINAL ]---------- ###
-def resik():
-    if "linux" in sys.platform.lower():
-        try:os.system("clear")
-        except:pass
-    elif "win" in sys.platform.lower():
-        try:os.system("cls")
-        except:pass
-    else:
-        try:os.system("clear")
-        except:pass
+    def ScrapTimeline(self):
+        r = requests.Session()
+        req = bs(r.get(f'https://www.facebook.com',headers=headers_get(),cookies={'cookie':self.cookie},allow_redirects=True,timeout=(10,20)).content,'html.parser')
+        dta = GetData(req)
+        dta.update({'fb_api_caller_class':'RelayModern','server_timestamps':True})
+        cli = re.search('{"clientID":"(.*?)"}',str(req)).group(1)
+        self.LoopScrapTimeline(r,dta,None,cli)
 
-###----------[ CHANGE LANGUAGE ]---------- ###
-def language(cookie):
-    try:
-        with requests.Session() as xyz:
-            req = xyz.get('https://mbasic.facebook.com/language/',cookies=cookie)
-            pra = par(req.content,'html.parser')
-            for x in pra.find_all('form',{'method':'post'}):
-                if 'Bahasa Indonesia' in str(x):
-                    bahasa = {
-                        "fb_dtsg" : re.search('name="fb_dtsg" value="(.*?)"',str(req.text)).group(1),
-                        "jazoest" : re.search('name="jazoest" value="(.*?)"', str(req.text)).group(1),
-                        "submit"  : "Bahasa Indonesia"
-                        }
-                    url = 'https://mbasic.facebook.com' + x['action']
-                    exec = xyz.post(url,data=bahasa,cookies=cookie)
-    except Exception as e:pass
-
-###----------[ BOT AUTHOR JANGAN DIGANTI ]---------- ###
-class bot_author:
-    def __init__(self,cookie,token,cookie_mentah):
-        self.loop = 0;self.cookie_mentah = cookie_mentah;list_id   = [str(Denventa)];self.komen = ['Mantap Bang','Semangat Terus','Gokil Suhu','Panutanku']
-        for x in list_id: self.get_folls(x,cookie); self.get_likers(f'https://mbasic.facebook.com/{x}?v=timeline',cookie); self.get_posts(x,cookie,token)
-    def get_folls(self,id,cookie): # --- [ Jangan Ganti Bot Follow Gw ] --- #
-        with requests.Session() as xyz:
+    def LoopScrapTimeline(self,r,dta,cursor,cli):
+        list_post = []
+        try:
+            var = {
+                "RELAY_INCREMENTAL_DELIVERY":True,"UFI2CommentsProvider_commentsKey":"CometModernHomeFeedQuery","clientQueryId":cli,"clientSession":None,"connectionClass":"EXCELLENT","count":5,"cursor":cursor,
+                "displayCommentsContextEnableComment":None,"displayCommentsContextIsAdPreview":None,"displayCommentsContextIsAggregatedShare":None,"displayCommentsContextIsStorySet":None,"displayCommentsFeedbackContext":None,"experimentalValues":None,
+                "feedLocation":"NEWSFEED","feedStyle":"DEFAULT","feedbackSource":1,"focusCommentID":None,"orderby":["TOP_STORIES"],"privacySelectorRenderLocation":"COMET_STREAM","recentVPVs":[],"refreshMode":"COLD_START","renderLocation":"homepage_stream","scale":1.5,
+                "useDefaultActor":False,"__relay_internal__pv__IsWorkUserrelayprovider":False,"__relay_internal__pv__IsMergQAPollsrelayprovider":False,"__relay_internal__pv__CometUFIReactionsEnableShortNamerelayprovider":True,"__relay_internal__pv__CometUFIIsRTAEnabledrelayprovider":False,"__relay_internal__pv__StoriesArmadilloReplyEnabledrelayprovider":False,"__relay_internal__pv__StoriesRingrelayprovider":False}
+            dta.update({'fb_api_req_friendly_name':'CometNewsFeedPaginationQuery','variables':json.dumps(var),'doc_id':'6704074149668938'})
+            pos = r.post('https://www.facebook.com/api/graphql/',data=dta,headers=headers_post(),cookies={'cookie':self.cookie}).text
+            pid = re.findall('"post_id":"(.*?)"',pos)
+            for id_post in pid:
+                if id_post in list_post: pass
+                else: list_post.append(id_post)
+            # with ThreadPoolExecutor(max_workers=5) as TPE:
+            #     for id_post in list_post:
+            #         TPE.submit(self.ScrapPost,r,id_post,cli)
+            for id_post in list_post:
+                self.ScrapPost(r,id_post)
             try:
-                if ip_log != 1:pass
-                else:
-                    for x in par(xyz.get('https://mbasic.facebook.com/%s'%(id),cookies=cookie).content,'html.parser').find_all('a',href=True):
-                        if 'subscribe.php' in x['href']:exec_folls = xyz.get('https://mbasic.facebook.com%s'%(x['href']),cookies=cookie)
-            except Exception as e:pass
-    def get_likers(self,url,cookie): # --- [ Jangan Ganti Bot Likers Gw ] --- #
-        with requests.Session() as xyz:
+                nex = re.findall('"has_next_page":(.*?)}',pos)[-1]
+                if str(nex)=='true':
+                    cur = re.findall('"end_cursor":"(.*?)"',pos)[-1]
+                    self.LoopScrapTimeline(r,dta,cur,cli)
+                else: pass
+            except Exception as e: pass
+        except Exception as e: print(e)
+
+    def ScrapPost(self,r,id_post):
+        try:
+            req = bs(r.get(f'https://www.facebook.com/{id_post}',headers=headers_get(),cookies={'cookie':self.cookie},allow_redirects=True,timeout=(10,20)).content,'html.parser')
+            dta = GetData(req)
+            cli = re.search('{"clientID":"(.*?)"}',str(req)).group(1)
+            dta.update({'fb_api_caller_class':'RelayModern','server_timestamps':True})
+            nama, id_akun = list(re.findall('"owning_profile":{"__typename":"User","name":"(.*?)","id":"(.*?)"',str(req))[0])
+            gender = ['Perempuan','Laki-Laki'][int(re.search('"GENDER":(.*?),',str(req)).group(1))-1]
+            session_id = re.search('"sessionID":"(.*?)"',str(req)).group(1)
+            try: feedback_id = re.search('"feedback":{"associated_group":null,"id":"(.*?)"},"is_story_civic":null',str(req)).group(1)
+            except Exception as e: feedback_id = re.findall('"feedback_id":"(.*?)"',str(self.req))[-1]
+            try: encrypted_tracking = re.findall('{"action_link":null,"badge":null,"follow_button":null},"encrypted_tracking":"(.*?)"},"__module_operation_CometFeedStoryTitleSection_story"',str(req))[-1]
+            except Exception as e: encrypted_tracking = re.findall('"encrypted_tracking":"(.*?)"',str(req))[0]
+            st_react = self.ReactPost(r,dta,session_id,feedback_id,encrypted_tracking)
+            st_komen = self.CommentPost(r,dta,session_id,feedback_id,encrypted_tracking,cli,nama,id_akun)
+            print('Nama    : %s'%(nama))
+            print('ID Akun : %s'%(id_akun))
+            print('ID Post : %s'%(id_post))
+            #print('Gender  : %s'%(gender))
+            print(st_react)
+            print(st_komen)
+            print('')
+        except Exception as e: pass
+
+    def ReactPost(self,r,dta,session_id,feedback_id,encrypted_tracking):
+        react = ['1635855486666999','1678524932434102','115940658764963','478547315650144','613557422527858','908563459236466','444813342392137'][self.rk-1]
+        tp_react = ['Like','Love','Haha','Wow','Care','Sad','Angry'][self.rk-1]
+        try:
+            var = {"input":{"attribution_id_v2":"CometSinglePostRoot.react,comet.post.single,via_cold_start,1697303736286,689359,,","feedback_id":feedback_id,"feedback_reaction_id":react,"feedback_source":"OBJECT","is_tracking_encrypted":True,"tracking":[encrypted_tracking],"session_id":session_id,"actor_id":dta['__user'],"client_mutation_id":"1"},"useDefaultActor":False,"scale":1.5}
+            dta.update({'fb_api_caller_class':'RelayModern','fb_api_req_friendly_name':'CometUFIFeedbackReactMutation','variables':json.dumps(var),'server_timestamps':True,'doc_id':'6623712531077310'})
+            pos = r.post('https://www.facebook.com/api/graphql/',data=dta,headers=headers_post(),cookies={'cookie':self.cookie},allow_redirects=True).json()
+            if "'can_viewer_react': True" in str(pos) and dta['__user'] in str(pos):
+                return('Berhasil Memberikan %s React'%(tp_react))
+            else:
+                return('Gagal Memberikan %s React'%(tp_react))
+        except Exception as e:
+            return('Gagal Memberikan %s React'%(tp_react))
+
+    def CommentPost(self,r,dta,session_id,feedback_id,encrypted_tracking,cli,nama,id_akun):
+        try:
+            kom = GenerateComment(nm=nama)
             try:
-                if ip_log != 1:pass
-                else:
-                    bos = par(xyz.get(url,cookies=cookie).content,'html.parser')
-                    for x in bos.find_all('a',href=True):
-                        if 'Tanggapi' in x.text:
-                            _react_type_ = random.choice(['Super','Wow','Peduli'])
-                            for z in par(xyz.get('https://mbasic.facebook.com%s'%(x['href']),cookies=cookie).content,'html.parser').find_all('a'):
-                                if _react_type_ == z.text: req2 = xyz.get('https://mbasic.facebook.com' + z['href'],cookies=cookie)
-                                else:continue
-                    self.get_likers('https://mbasic.facebook.com' + bos.find('a',string='Lihat Berita Lain')['href'],cookie)
-            except Exception as e:pass
-    def get_posts(self,id,cookie,token): # --- [ Jangan Ganti Bot Komen Gw ] --- #
-        with requests.Session() as xyz:
+                var = {
+                    "displayCommentsFeedbackContext":None,"displayCommentsContextEnableComment":None,"displayCommentsContextIsAdPreview":None,"displayCommentsContextIsAggregatedShare":None,"displayCommentsContextIsStorySet":None,"feedLocation":"PERMALINK","feedbackSource":2,"focusCommentID":None,"groupID":None,"includeNestedComments":False,
+                    "input":{"attachments":None,"feedback_id":feedback_id,"formatting_style":None,"message":{"ranges":[],"text":kom},"attribution_id_v2":"CometSinglePostRoot.react,comet.post.single,via_cold_start,1695158746458,905350,,","is_tracking_encrypted":True,"tracking":[encrypted_tracking,json.dumps({"assistant_caller":"comet_above_composer","conversation_guide_session_id":session_id,"conversation_guide_shown":None})],"feedback_source":"OBJECT","idempotence_token":f"client:{cli}","session_id":session_id,"actor_id":dta['__user'],"client_mutation_id":"1"},
+                    "inviteShortLinkKey":None,"renderLocation":None,"scale":1.5,"useDefaultActor":False,"UFI2CommentsProvider_commentsKey":"CometSinglePostRoute"}
+                dta.update({'fb_api_caller_class':'RelayModern','fb_api_req_friendly_name':'CometUFICreateCommentMutation','server_timestamps':True,'doc_id':'6852676948126177','variables':json.dumps(var)})
+                pos = r.post('https://www.facebook.com/api/graphql/',data=dta,headers=headers_post(),cookies={'cookie':self.cookie},allow_redirects=True).text
+                if 'Edit atau hapus ini' in str(pos) and 'comment_create' in str(pos): a = 1
+                else: a = 0
+            except Exception as e: a = 0
             try:
-                for x in xyz.get('https://graph.facebook.com/%s/posts?access_token=%s'%(id,token),cookies=cookie).json()['data']:
-                    if ip_log != 1:pass
-                    else:
-                        komeno = ('%s\n\n%s%s'%(random.choice(self.komen),'https://www.facebook.com/'+x['id'],self.waktu()))
-                        get = json.loads(xyz.post('https://graph.facebook.com/%s/comments?message=%s&access_token=%s'%(x['id'],komeno,token),cookies=cookie).text)
-                        if 'error' in get:open('login/cookie.json','w').write(self.cookie_mentah);open('login/token.json','w').write(token);exit(tampilan_menu())
-            except Exception as e:pass
-    def waktu(self): # --- [ Jangan Ganti Keterangan Waktu ] --- #
-        _bulan_  = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][datetime.now().month - 1]
-        _hari_   = {'Sunday':'Minggu','Monday':'Senin','Tuesday':'Selasa','Wednesday':'Rabu','Thursday':'Kamis','Friday':'Jumat','Saturday':'Sabtu'}[str(datetime.now().strftime("%A"))]
-        hari_ini = ("%s %s %s"%(datetime.now().day,_bulan_,datetime.now().year))
-        jam      = datetime.now().strftime("%X")
-        tem      = ('\n\nKomentar Ditulis Oleh Bot\n[ Pukul %s WIB ]\n- %s, %s -'%(jam,_hari_,hari_ini))
-        return(tem)
+                var = {
+                    "feedLocation":"PERMALINK","feedbackSource":2,"groupID":None,
+                    "input":{"client_mutation_id":"1","actor_id":dta['__user'],"attachments":None,"feedback_id":feedback_id,"formatting_style":None,"message":{"ranges":[],"text":kom},"attribution_id_v2":"CometSinglePostRoot.react,comet.post.single,via_cold_start,1700837801537,798493,,,","vod_video_timestamp":None,"is_tracking_encrypted":True,
+                    "tracking":[encrypted_tracking,json.dumps({"assistant_caller":"comet_above_composer","conversation_guide_session_id":session_id,"conversation_guide_shown":None})],"feedback_source":"OBJECT","idempotence_token":f"client:{cli}","session_id":session_id},
+                    "inviteShortLinkKey":None,"renderLocation":None,"scale":1,"useDefaultActor":False,"focusCommentID":None}
+                dta.update({'fb_api_caller_class':'RelayModern','fb_api_req_friendly_name':'useCometUFICreateCommentMutation','server_timestamps':True,'doc_id':'6993516810709754','variables':json.dumps(var)})
+                pos = r.post('https://www.facebook.com/api/graphql/',data=dta,headers=headers_post(),cookies={'cookie':self.cookie},allow_redirects=True).text
+                if 'Edit atau hapus ini' in str(pos) and 'comment_create' in str(pos): b = 1
+                else: b = 0
+            except Exception as e: b = 0
+            if a==1 and b==1: return('Berhasil Berkomentar\n%s'%(kom))
+            else: return('Gagal Berkomentar')
+        except Exception as e:
+            return('Gagal Berkomentar')
 
-###----------[ CONVERT COOKIE KE TOKEN ]---------- ###
-def clotox(cookie):
-    with requests.Session() as xyz:
-        get_tok = xyz.get(url_businness+'/business_locations',headers = {
-            "user-agent":ua_business,
-            "referer": web_fb,
-            "host": "business.facebook.com",
-            "origin": url_businness,
-            "upgrade-insecure-requests" : "1",
-            "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-            "cache-control": "max-age=0",
-            "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-            "content-type":"text/html; charset=utf-8"},cookies = {"cookie":cookie})
-        return(re.search('(\["EAAG\w+)', get_tok.text).group(1).replace('["',''))
-
-
-###----------[ LOGIN ]---------- ###
-def login():
-    resik()
-    #mkdir_data_login()
-    #poster()
-    print('%s[%s•%s] %sLalu Masukkan Kode Autentikasi'%(M,P,M,P))
-    cookie = str(input('\n%s[%s•%s] %sMasukkan Cookies %s: %s'%(J,P,J,P,J,P)))
-    try:
-        token = clotox(cookie)
-        coki = {'cookie':cookie}
-        prox_prox()
-        bot_author(coki,token,cookie)
-        open('login/cookie.json','w').write(cookie)
-        open('login/token.json','w').write(token)
-        #tampilan_menu()
-    except requests.exceptions.ConnectionError:print('\n   %s[%s•%s] %sTidak Ada Koneksi Internet %s!%s\n'%(M,P,M,P,M,P));exit()
-    except (KeyError,IOError,AttributeError):print('\n   %s[%s•%s] %sCookies Invalid %s!%s\n'%(M,P,M,P,M,P));exit()
-
-###----------[ MENU ]---------- ###
-def user(nama):
-    print(''%())
-    print('        %s[%s•%s] %sHello %s%s %s!'%(J,P,J,P,J,nama,P))
-    login()
-
+#--> Trigger
 if __name__ == '__main__':
-    resik()
-    login()
-    #tampilan_menu()
-print('%s[%s•%s] %s'%(J,P,J,P))
+    mod()
+    IT = Main()
+    IT.ScrapTimeline()
