@@ -27,41 +27,52 @@ headers_post = lambda i=default_ua_windows : {'Accept':'*/*','Accept-Encoding':'
 def clear(): os.system('clear' if 'linux' in sys.platform.lower() else 'cls')
 
 #--> Time
-def GetTime():
-    skr = datetime.datetime.now()
-    jam = int(skr.strftime('%H'))
-    if    3<jam<=10 : t = 'Pagi'
-    elif 10<jam<=14 : t = 'Siang'
-    elif 14<jam<=18 : t = 'Sore'
-    elif 18<jam<=24 or 0<=jam<=3 : t = 'Malam'
-    return(t)
 
-#--> Random Comment
-def GenerateComment(nm='Kamu', tm=GetTime()):
-    sapa = ['Haii','Haloo','Hii','Aloo']
-    psan = [
-        'Ketika kamuu ngelakuin sesuatu yang mulia dan indah, tapi gaada seorang pun memperhatikan, jangan bersedih. Karena matahari pun tampil cantik setiap pagi meski sebagian besar penontonnya masih tertidur.',
-        'Jomblo boleh, kesepian jangan. Sini, biar kamu enggak kesepian di %s yang cerah ini, aku ikhlas, enggak apa-apa biar aku saja yang ngucapin selamat %s'%(GetTime().lower(),GetTime().lower()),
-        'Pemimpi sepertimu tidak butuh ucapan selamat %s, yang kamu butuhkan adalah alarm besar dan teman menyebalkan seperti ku untuk membuatmu terbangun dari mimpimu.'%(GetTime().lower()),
-        'Jangan khawatir tentang kegagalan, khawatirlah tentang peluang yang kamu lewatkan ketika kamu bahkan tidak mencoba.',
-        'Setiap manusia punya kesempatan baru, jangan kamu terpaku dengan masa lalumu. Lihat ke luar dan syukuri segala nikmat yang diberikan oleh Tuhan.',
-        'Lupakan apa yang tidak dapat kamu capai kemarin dan pikirkan hal-hal indah yang kamu miliki hari ini.',
-        'Teman lama pergi, teman baru datang. Seperti hari, yang lama berlalu dan pagi pun menjelang. Yang paling penting adalah bagaimana membuatnya berarti.',
-        'Kamu tidak harus menjadi hebat dulu untuk memulai, tapi kamu perlu memulai untuk menjadi hebat']
-    love = ['❤️','💙','🧡','💚','💛','💜','🖤']
-    supp = [
-        'Semangat Yaa Menjalani Hari-Harinyaa %s'%(random.choice(love)),
-        'Tetep Semangat, Jangan Nyerah %s'%(random.choice(love)),
-        'Kalau Kamu Butuh Aku, Aku Disini Kok %s'%(random.choice(love)),
-        'Jangan Merasa Kesepian, Kan Ada Aku Disini %s'%(random.choice(love)),
-        'Jangan Sedih Terus Dong, Kan Aku Jadi Ikutan Sedih %s'%(random.choice(love)),
-        'Kamu Pasti Bisa! Semangatt %s'%(random.choice(love)),
-        'Tenang Ajaa, Aku Support Kamu Terus Kok %s'%(random.choice(love)),
-        'Jangan Nyerah Yaa, Yang Akan Datang Akan Lebih Baik Buatmu %s'%(random.choice(love))]
-    op  = random.choice(sapa)
-    psn = random.choice(psan)
-    sp  = random.choice(supp)
-    return(f'{op} {nm}, Selamat {tm}!\n{psn}\n{sp}')
+
+def GetTime():
+    current_time = datetime.datetime.now()
+    hour = int(current_time.strftime('%H'))
+    
+    if 3 < hour <= 10:
+        time_of_day = 'Morning'
+    elif 10 < hour <= 14:
+        time_of_day = 'Afternoon'
+    elif 14 < hour <= 18:
+        time_of_day = 'Evening'
+    elif 18 < hour <= 24 or 0 <= hour <= 3:
+        time_of_day = 'Night'
+    
+    return time_of_day
+
+
+def GenerateComment(name='You', time=GetTime()):
+    greetings = ['Hi', 'Hello', 'Hey', 'Hi there']
+    messages = [
+        'When you do something noble and beautiful, but no one notices, don\'t be sad. Because the sun looks beautiful every morning even though most of its audience is still asleep.',
+        'Being single is okay, being lonely isn\'t. Come here, so you won\'t be lonely on this bright %s, I don\'t mind being the one to wish you a happy %s' % (time.lower(), time.lower()),
+        'Dreamers like you don\'t need wishes for a good %s, what you need is a loud alarm and an annoying friend like me to wake you up from your dreams.' % (time.lower()),
+        'Don\'t worry about failure, worry about the chances you miss when you don\'t even try.',
+        'Every person has a new chance, don\'t be fixated on your past. Look outside and be grateful for all the blessings given by God.',
+        'Forget what you couldn\'t achieve yesterday and think about the beautiful things you have today.',
+        'Old friends leave, new friends come. Like the day, the old passes and the morning approaches. What matters most is how to make it meaningful.',
+        'You don\'t have to be great to start, but you have to start to be great.'
+    ]
+    love_emojis = ['❤️', '💙', '🧡', '💚', '💛', '💜', '🖤']
+    support = [
+        'Cheer up! Have a great day %s' % (random.choice(love_emojis)),
+        'Stay strong, don\'t give up %s' % (random.choice(love_emojis)),
+        'If you need me, I\'m here for you %s' % (random.choice(love_emojis)),
+        'Don\'t feel lonely, I\'m here for you %s' % (random.choice(love_emojis)),
+        'Don\'t be sad all the time, I end up getting sad too %s' % (random.choice(love_emojis)),
+        'You can do it! Stay strong %s' % (random.choice(love_emojis)),
+        'Just relax, I support you all the way %s' % (random.choice(love_emojis)),
+        'Don\'t give up, what\'s coming will be better for you %s' % (random.choice(love_emojis))
+    ]
+    greeting = random.choice(greetings)
+    message = random.choice(messages)
+    support_phrase = random.choice(support)
+    
+    return f'{greeting} {name}, Good {time}!\n{message}\n{support_phrase}'
 
 #--> Get Data
 def GetData(req):
@@ -138,10 +149,10 @@ class Main():
             except Exception as e: encrypted_tracking = re.findall('"encrypted_tracking":"(.*?)"',str(req))[0]
             st_react = self.ReactPost(r,dta,session_id,feedback_id,encrypted_tracking)
             st_komen = self.CommentPost(r,dta,session_id,feedback_id,encrypted_tracking,cli,nama,id_akun)
-            print('Nama    : %s'%(nama))
-            print('ID Akun : %s'%(id_akun))
+            print('Name   : %s'%(nama))
+            print('ID     : %s'%(id_akun))
             print('ID Post : %s'%(id_post))
-            #print('Gender  : %s'%(gender))
+            print('Gender  : %s'%(gender))
             print(st_react)
             print(st_komen)
             print('')
