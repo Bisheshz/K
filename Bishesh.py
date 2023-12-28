@@ -92,11 +92,24 @@ def GetData(req):
 
 class Main():
 
+    #class YourClass:
     def __init__(self):
         try:
-            self.cookie = open('login/cookie.json','r').read()
-        except Exception as e: exit('Cookie Invalid')
+            # Option 1: Input Cookie on Terminal
+            user_input = input("Enter your cookie: ")
+            self.cookie = user_input.strip()
+
+            # Option 2: Use Existing Cookie in the Code
+            # Uncomment the line below if you want to use the existing cookie in the 'login/cookie.json' file
+            # self.cookie = open('login/cookie.json', 'r').read()
+
+        except Exception as e:
+            exit('Cookie Invalid')
         self.rk = 2
+
+# Instantiate your class
+#your_instance = YourClass()
+
 
     def ScrapTimeline(self):
         r = requests.Session()
